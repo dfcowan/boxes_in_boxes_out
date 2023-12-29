@@ -3,12 +3,12 @@ import re
 from io import BytesIO, StringIO
 from espn_api.football import League
 from flask import Flask, request, jsonify, send_file
-app = Flask(__name__)
+scoreboard = Flask(__name__)
 
 
 
 # A welcome message to test our server
-@app.route('/')
+@scoreboard.route('/')
 def index():
     return "<h1>Welcome to our server !!</h1>"
 
@@ -154,7 +154,7 @@ def printTeam(team, lineup):
     return html
 
 
-@app.route('/finalsScoreboard', methods=['GET'])
+@scoreboard.route('/finalsScoreboard', methods=['GET'])
 def respond():
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
@@ -218,7 +218,7 @@ def respond():
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000)
+    scoreboard.run(threaded=True, port=5000)
 
 
 
