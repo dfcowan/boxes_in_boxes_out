@@ -184,7 +184,7 @@ def respond():
     rep += "<td>"
     leagueDSM = League(league_id=635993, year=2023)
     teamByrd = leagueDSM.teams[3]
-    lineupByrd = [3916387,3068267,3054850,3116406,4241478,3123076,4259545,4432577,-16021]
+    lineupByrd = [4379399,3916387,3054850,3116406,4241478,3123076,4259545,4432577,-16021]
     rep += printTeam(teamByrd, lineupByrd)
     rep += "</td>"
     rep += "</tr>"
