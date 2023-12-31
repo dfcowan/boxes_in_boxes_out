@@ -166,7 +166,7 @@ def respond():
     rep += "<td>"
     leagueDev = League(league_id=1020397, year=2023)
     teamDrew = leagueDev.teams[3]
-    lineupDrew = [3892775, 3117251, 15847, 4242335, 2577327, 4036378, 2576414,4428331,-16013]
+    lineupDrew = [4361777,3892775, 3117251, 15847, 4242335, 2577327, 4036378 ,4428331,-16013]
     rep += printTeam(teamDrew, lineupDrew)
     rep += "</td>"
     rep += "</tr>"
@@ -175,7 +175,7 @@ def respond():
     rep += "<td>"
     leagueAna = League(league_id=1953587261, year=2023)
     teamAlex = leagueAna.teams[4]
-    lineupAlex = [3139477, 4697815, 4379399, 4374302, 4360438, 4361050, 2576414, 4361741, -16014]
+    lineupAlex = [3139477, 4697815, 4379399, 4374302, 4360438, 4361050, 4259545, 4361741, -16014]
     rep += printTeam(teamAlex, lineupAlex)
     rep += "</td>"
     rep += "</tr>"
