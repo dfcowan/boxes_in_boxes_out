@@ -166,7 +166,7 @@ def respond():
     rep += "<td>"
     leagueDev = League(league_id=1020397, year=2023)
     teamDrew = leagueDev.teams[3]
-    lineupDrew = [4361777,3892775, 3117251, 15847, 4242335, 2577327, 4036378 ,4428331,-16013]
+    lineupDrew = [4361777,3892775, 3117251, 15847, 4242335, 2577327, 4036378 ,4362249,-16013]
     rep += printTeam(teamDrew, lineupDrew)
     rep += "</td>"
     rep += "</tr>"
