@@ -175,7 +175,7 @@ def respond():
     rep += "<td>"
     leagueAna = League(league_id=1953587261, year=2023)
     teamAlex = leagueAna.teams[4]
-    lineupAlex = [3139477, 4697815, 4379399, 4374302, 4360438, 4361050, 4361741, 4361777, -16013]
+    lineupAlex = [3139477, 4697815, 4242431, 4374302, 4360438, 4361050, 4361741, 4361777, -16013]
     rep += printTeam(teamAlex, lineupAlex)
     rep += "</td>"
     rep += "</tr>"
