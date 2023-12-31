@@ -37,8 +37,8 @@ def printPlayer(position, player, longestNameLength):
     html += "<tr>"
     html += "<td>" + position + "</td>"
     
-    htmlTxt = "<td>{}</td><td>{}</td>"
-    html += htmlTxt.format(player.name, player.proTeam)
+    htmlTxt = "<td><span title='{}'>{}</span></td><td>{}</td>"
+    html += htmlTxt.format(player.playerId, player.name, player.proTeam)
 
     txt = "{} {} {} ({})"
     txt = txt.format(position.ljust(4), player.name, player.proTeam, player.playerId).ljust(longestNameLength)
