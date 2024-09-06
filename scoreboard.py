@@ -35,8 +35,8 @@ def printPlayer(position: str, player: Player, longestNameLength: int, week: int
     html += "<tr>"
     html += "<td>" + position + "</td>"
 
-    htmlTxt = "<td>{}</td><td>{}</td>"
-    html += htmlTxt.format(player.name, player.proTeam)
+    htmlTxt = "<td><span title='{}'>{}</span></td><td>{}</td>"
+    html += htmlTxt.format(player.playerId, player.name, player.proTeam)
 
     txt = "{} {} {} ({})"
     txt = txt.format(position.ljust(4), player.name, player.proTeam, player.playerId).ljust(longestNameLength)
@@ -176,7 +176,7 @@ def finalsScoreboard():
     rep += "<td>"
     leagueAna = League(league_id=1953587261, year=year)
     teamAlex = leagueAna.teams[4]
-    lineupAlex = [3139477, 4697815, 4379399, 4374302, 4360438, 4361050, 2576414, 4361741, -16014]
+    lineupAlex = [3139477, 4697815, 4242431, 4374302, 4360438, 4361050, 4361741, 4361777, -16013]
     rep += printTeam(teamAlex, lineupAlex, week)
     rep += "</td>"
     rep += "</tr>"
@@ -185,7 +185,7 @@ def finalsScoreboard():
     rep += "<td>"
     leagueDSM = League(league_id=635993, year=year)
     teamByrd = leagueDSM.teams[3]
-    lineupByrd = [3916387,3068267,3054850,3116406,4241478,3123076,4259545,4432577,-16021]
+    lineupByrd = [4379399,3916387,3054850,3116406,4241478,3123076,4259545,4432577,-16021]
     rep += printTeam(teamByrd, lineupByrd, week)
     rep += "</td>"
     rep += "</tr>"
