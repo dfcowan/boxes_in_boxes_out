@@ -1,3 +1,4 @@
+import json
 import requests
 import re
 from io import BytesIO, StringIO
@@ -6,6 +7,7 @@ from flask import Flask, request, jsonify, send_file
 scoreboard = Flask(__name__)
 
 
+year = 2024
 
 # A welcome message to test our server
 @scoreboard.route('/')
@@ -154,8 +156,7 @@ def printTeam(team: Team, lineup: list[int], week: int):
 
 @scoreboard.route('/finalsScoreboard', methods=['GET'])
 def finalsScoreboard():
-    year = 2023
-    week = 17
+    week = 1
 
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
@@ -217,6 +218,107 @@ def finalsScoreboard():
 
     return rep
 
+@scoreboard.route('/boxScores', methods=['GET'])
+def boxScores():
+    leagueDev = League(league_id=1020397, year=year)
+    leagueAna = League(league_id=1953587261, year=year)
+    leagueDSM = League(league_id=635993, year=year)
+    leagueMis = League(league_id=517497302, year=year)
+
+    week = leagueDev.current_week
+
+    allBoxScores = leagueDev.box_scores(week=week)
+    allBoxScores = allBoxScores + leagueAna.box_scores(week=week)
+    allBoxScores = allBoxScores + leagueDSM.box_scores(week=week)
+    allBoxScores = allBoxScores + leagueMis.box_scores(week=week)
+
+    rep = "<html>"
+    rep += "<meta name='viewport' content='width=device-width'>"
+    rep += "<body>"
+    rep += "<h1>Boxes In, Boxes Out<br/>League Scoreboard</h1>"
+
+    i = 0
+    for boxScore in allBoxScores:
+        cls = "developer"
+        leagueId = "1020397"
+        if i>=6 and i<12:
+            cls = "analyst"
+            leagueId = "1953587261"
+        elif i>=12 and i<18:
+            cls = "dsm"
+            leagueId = "635993"
+        elif i>=18:
+            cls = "misfit"
+            leagueId = "517497302"
+
+        rep += "<div class=\"boxScore " + cls + "\">"
+        rep += "<table style=\"width: 100%;\">"
+        rep += "<tr>"
+        rep += "<td style=\"overflow: hidden;\">"
+        rep += "<img src=\"" + boxScore.home_team.logo_url + "\" style=\"vertical-align:middle; height: 20px; width: 20px; overflow: hidden; margin-right: 5px;\" />"
+        rep += "<span>" + boxScore.home_team.team_name + "</span> "
+        rep += "<span>(" + boxScore.home_team.owners[0]["firstName"] + " " + boxScore.home_team.owners[0]["lastName"] + ")</span>"
+        rep += "</td>"
+        rep += "<td style=\"width: 40px;\">"
+        rep += str(boxScore.home_score)
+        rep += "</td>"
+        rep += "<td style=\"width: 80px;\">"
+        rep += "Proj. " + str(boxScore.home_projected)
+        rep += "</td>"
+        rep += "</tr>"
+
+        rep += "<tr>"
+        rep += "<td>"
+        rep += "<img src=\"" + boxScore.away_team.logo_url + "\" style=\"vertical-align:middle; height: 20px; width: 20px; overflow: hidden; margin-right: 5px;\" />"
+        rep += "<span>" + boxScore.away_team.team_name + "</span> "
+        rep += "<span>(" + boxScore.away_team.owners[0]["firstName"] + " " + boxScore.away_team.owners[0]["lastName"] + ")</span>"
+        rep += "</td>"
+        rep += "<td>"
+        rep += str(boxScore.away_score)
+        rep += "</td>"
+        rep += "<td>"
+        rep += "Proj. " + str(boxScore.away_projected)
+        rep += "</td>"
+        rep += "</tr>"
+
+        rep += "</table>"
+
+        # rep += "<a href=\"https://fantasy.espn.com/football/boxscore?leagueId=" + leagueId + "&matchupPeriodId=" + str(week) + "&seasonId=" + str(year) + "&teamId=" + str(boxScore.home_team.team_id) + "\">View on ESPN</a>"
+
+        rep += "</div>"
+
+        i+=1
+
+
+    rep += "</body>"
+    rep += "<style>"
+    rep += ".boxScore {"
+    rep += "width: 100%;"
+    rep += "border: 2px solid gray;"
+    rep += "margin: 3px;"
+    rep += "padding: 3px;"
+    rep += "}"
+    rep += ".developer"
+    rep += "{"
+    rep += "background-color: ef476f;"
+    rep += "}"
+    rep += ".analyst"
+    rep += "{"
+    rep += "background-color: ffd166"
+    rep += "}"
+    rep += ".dsm"
+    rep += "{"
+    rep += "background-color: 06d6a0"
+    rep += "}"
+    rep += ".misfit"
+    rep += "{"
+    rep += "background-color: 118ab2"
+    rep += "}"
+    rep += "</style>"
+    rep += "</html>"
+
+    return rep
+
 def sortPoints(team: Team):
     return -1 * team.points_for
 
@@ -228,8 +330,6 @@ def sortPlayoff(team: Team):
 
 @scoreboard.route('/standings', methods=['GET'])
 def standings():
-    year = 2024
-
     leagueDev = League(league_id=1020397, year=year)
     leagueAna = League(league_id=1953587261, year=year)
     leagueDSM = League(league_id=635993, year=year)
@@ -247,7 +347,7 @@ def standings():
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
     rep += "<body>"
-    rep += "<h1>Boxes In, Boxes Out Standings</h1>"
+    rep += "<h1>Boxes In, Boxes Out<br/>Standings</h1>"
 
     rep += "<table>"
     rep += "<thead>"
@@ -264,7 +364,15 @@ def standings():
 
 
     for (idx, team) in enumerate(allTeams):
-        rep += "<tr>"
+        cls = "developer"
+        if team in leagueAna.teams:
+            cls = "analyst"
+        elif team in leagueDSM.teams:
+            cls = "dsm"
+        elif team in leagueMis.teams:
+            cls = "misfit"
+
+        rep += "<tr class=\"" + cls + "\">"
 
         rep += "<td>"
         rep += str(idx + 1)
@@ -310,6 +418,22 @@ def standings():
     rep += "padding: 5px;"
     rep += "text-align: left;"
     rep += "font-weight: bold;"
+    rep += "}"
+    rep += ".developer"
+    rep += "{"
+    rep += "background-color: ef476f;"
+    rep += "}"
+    rep += ".analyst"
+    rep += "{"
+    rep += "background-color: ffd166"
+    rep += "}"
+    rep += ".dsm"
+    rep += "{"
+    rep += "background-color: 06d6a0"
+    rep += "}"
+    rep += ".misfit"
+    rep += "{"
+    rep += "background-color: 118ab2"
     rep += "}"
     rep += "</style>"
     rep += "</html>"
