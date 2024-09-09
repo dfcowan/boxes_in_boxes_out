@@ -227,63 +227,146 @@ def boxScores():
 
     week = leagueDev.current_week
 
-    allBoxScores = leagueDev.box_scores(week=week)
-    allBoxScores = allBoxScores + leagueAna.box_scores(week=week)
-    allBoxScores = allBoxScores + leagueDSM.box_scores(week=week)
-    allBoxScores = allBoxScores + leagueMis.box_scores(week=week)
+    allBoxScores = []
+
+    scoresDev = []
+    scoresAna = []
+    scoresDSM = []
+    scoresMis = []
+
+    projScoresDev = []
+    projScoresAna = []
+    projScoresDSM = []
+    projScoresMis = []
+
+    for boxScore in leagueDev.box_scores(week=week):
+        allBoxScores.append(boxScore)
+
+        scoresDev.append(boxScore.home_score)
+        scoresDev.append(boxScore.away_score)
+
+        projScoresDev.append(boxScore.home_projected)
+        projScoresDev.append(boxScore.away_projected)
+
+    for boxScore in leagueAna.box_scores(week=week):
+        allBoxScores.append(boxScore)
+
+        scoresAna.append(boxScore.home_score)
+        scoresAna.append(boxScore.away_score)
+
+        projScoresAna.append(boxScore.home_projected)
+        projScoresAna.append(boxScore.away_projected)
+
+    for boxScore in leagueDSM.box_scores(week=week):
+        allBoxScores.append(boxScore)
+
+        scoresDSM.append(boxScore.home_score)
+        scoresDSM.append(boxScore.away_score)
+
+        projScoresDSM.append(boxScore.home_projected)
+        projScoresDSM.append(boxScore.away_projected)
+
+    for boxScore in leagueMis.box_scores(week=week):
+        allBoxScores.append(boxScore)
+
+        scoresMis.append(boxScore.home_score)
+        scoresMis.append(boxScore.away_score)
+
+        projScoresMis.append(boxScore.home_projected)
+        projScoresMis.append(boxScore.away_projected)
+
+    scoresDev.sort(reverse=True)
+    scoresAna.sort(reverse=True)
+    scoresDSM.sort(reverse=True)
+    scoresMis.sort(reverse=True)
+
+    projScoresDev.sort(reverse=True)
+    projScoresAna.sort(reverse=True)
+    projScoresDSM.sort(reverse=True)
+    projScoresMis.sort(reverse=True)
 
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
     rep += "<body>"
-    rep += "<h1>Boxes In, Boxes Out<br/>League Scoreboard</h1>"
+    rep += "<h1>Boxes In, Boxes Out<br/>Scoreboard</h1>"
+
+    rep += "<a href=\"standings\">Standings</a>"
 
     i = 0
     for boxScore in allBoxScores:
         cls = "developer"
         leagueId = "1020397"
+        homeRank = -1
+        awayRank = -1
+        homeProjectedRank = -1
+        awayProjectedRank = -1
+        if i < 6:
+            homeRank = scoresDev.index(boxScore.home_score) + 1
+            awayRank = scoresDev.index(boxScore.away_score) + 1
+
+            homeProjectedRank = projScoresDev.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresDev.index(boxScore.away_projected) + 1
         if i>=6 and i<12:
             cls = "analyst"
             leagueId = "1953587261"
+
+            homeRank = scoresAna.index(boxScore.home_score) + 1
+            awayRank = scoresAna.index(boxScore.away_score) + 1
+
+            homeProjectedRank = projScoresAna.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresAna.index(boxScore.away_projected) + 1
         elif i>=12 and i<18:
             cls = "dsm"
             leagueId = "635993"
+
+            homeRank = scoresDSM.index(boxScore.home_score) + 1
+            awayRank = scoresDSM.index(boxScore.away_score) + 1
+
+            homeProjectedRank = projScoresDSM.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresDSM.index(boxScore.away_projected) + 1
         elif i>=18:
             cls = "misfit"
             leagueId = "517497302"
+
+            homeRank = scoresMis.index(boxScore.home_score) + 1
+            awayRank = scoresMis.index(boxScore.away_score) + 1
+
+            homeProjectedRank = projScoresMis.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresMis.index(boxScore.away_projected) + 1
 
         rep += "<div class=\"boxScore " + cls + "\">"
         rep += "<table style=\"width: 100%;\">"
         rep += "<tr>"
         rep += "<td style=\"overflow: hidden;\">"
         rep += "<img src=\"" + boxScore.home_team.logo_url + "\" style=\"vertical-align:middle; height: 20px; width: 20px; overflow: hidden; margin-right: 5px;\" />"
-        rep += "<span>" + boxScore.home_team.team_name + "</span> "
+        rep += "<a href=\"https://fantasy.espn.com/football/team?leagueId=" + leagueId + "&teamId=" + str(boxScore.home_team.team_id) + "\">" + boxScore.home_team.team_name + "</a> "
         rep += "<span>(" + boxScore.home_team.owners[0]["firstName"] + " " + boxScore.home_team.owners[0]["lastName"] + ")</span>"
         rep += "</td>"
-        rep += "<td style=\"width: 40px;\">"
-        rep += str(boxScore.home_score)
-        rep += "</td>"
         rep += "<td style=\"width: 80px;\">"
-        rep += "Proj. " + str(boxScore.home_projected)
+        rep += str(boxScore.home_score) + "&nbsp;(" + str(homeRank) + ")"
+        rep += "</td>"
+        rep += "<td style=\"width: 120px;\">"
+        rep += "Proj.&nbsp;" + str(boxScore.home_projected) + "&nbsp;(" + str(homeProjectedRank) + ")"
         rep += "</td>"
         rep += "</tr>"
 
         rep += "<tr>"
         rep += "<td>"
         rep += "<img src=\"" + boxScore.away_team.logo_url + "\" style=\"vertical-align:middle; height: 20px; width: 20px; overflow: hidden; margin-right: 5px;\" />"
-        rep += "<span>" + boxScore.away_team.team_name + "</span> "
+        rep += "<a href=\"https://fantasy.espn.com/football/team?leagueId=" + leagueId + "&teamId=" + str(boxScore.away_team.team_id) + "\">" + boxScore.away_team.team_name + "</a> "
         rep += "<span>(" + boxScore.away_team.owners[0]["firstName"] + " " + boxScore.away_team.owners[0]["lastName"] + ")</span>"
         rep += "</td>"
         rep += "<td>"
-        rep += str(boxScore.away_score)
+        rep += str(boxScore.away_score) + "&nbsp;(" + str(awayRank) + ")"
         rep += "</td>"
         rep += "<td>"
-        rep += "Proj. " + str(boxScore.away_projected)
+        rep += "Proj.&nbsp;" + str(boxScore.away_projected) + "&nbsp;(" + str(awayProjectedRank) + ")"
         rep += "</td>"
         rep += "</tr>"
 
         rep += "</table>"
 
-        # rep += "<a href=\"https://fantasy.espn.com/football/boxscore?leagueId=" + leagueId + "&matchupPeriodId=" + str(week) + "&seasonId=" + str(year) + "&teamId=" + str(boxScore.home_team.team_id) + "\">View on ESPN</a>"
+        rep += "<a href=\"https://fantasy.espn.com/football/boxscore?leagueId=" + leagueId + "&matchupPeriodId=" + str(week) + "&seasonId=" + str(year) + "&teamId=" + str(boxScore.away_team.team_id) + "\">View Box Score on ESPN</a>"
 
         rep += "</div>"
 
@@ -293,7 +376,7 @@ def boxScores():
     rep += "</body>"
     rep += "<style>"
     rep += ".boxScore {"
-    rep += "width: 100%;"
+    rep += "width: 600px;"
     rep += "border: 2px solid gray;"
     rep += "margin: 3px;"
     rep += "padding: 3px;"
@@ -335,6 +418,11 @@ def standings():
     leagueDSM = League(league_id=635993, year=year)
     leagueMis = League(league_id=517497302, year=year)
 
+    standingsDev = leagueDev.standings()
+    standingsAna = leagueAna.standings()
+    standingsDSM = leagueDSM.standings()
+    standingsMis = leagueMis.standings()
+
     allTeams = leagueDev.teams.copy()
     allTeams = allTeams + leagueAna.teams
     allTeams = allTeams + leagueDSM.teams
@@ -349,57 +437,74 @@ def standings():
     rep += "<body>"
     rep += "<h1>Boxes In, Boxes Out<br/>Standings</h1>"
 
+    rep += "<a href=\"boxScores\">Box Scores</a>"
+
     rep += "<table>"
     rep += "<thead>"
     rep += "<tr>"
-    rep += "<th></th>"
+    rep += "<th style=\"width: 20px; text-align: center;\"></th>"
+    rep += "<th style=\"width: 20px; text-align: center;\"></th>"
     rep += "<th>Team</th>"
-    rep += "<th>W</th>"
-    rep += "<th>L</th>"
-    rep += "<th>T</th>"
-    rep += "<th>Pts</th>"
-    rep += "<th>PO%</th>"
+    rep += "<th style=\"width: 20px; text-align: center;\">W</th>"
+    rep += "<th style=\"width: 20px; text-align: center;\">L</th>"
+    rep += "<th style=\"width: 20px; text-align: center;\">T</th>"
+    rep += "<th style=\"width: 20px; text-align: center;\">Pts</th>"
+    rep += "<th style=\"width: 20px; text-align: center;\">PO%</th>"
     rep += "</tr>"
     rep += "</thead>"
 
 
     for (idx, team) in enumerate(allTeams):
-        cls = "developer"
+        placeInLeague = -1
+        if team in leagueDev.teams:
+            cls = "developer"
+            leagueId = "1020397"
+            placeInLeague = standingsDev.index(team) + 1
         if team in leagueAna.teams:
             cls = "analyst"
+            leagueId = "1953587261"
+            placeInLeague = standingsAna.index(team) + 1
         elif team in leagueDSM.teams:
             cls = "dsm"
+            leagueId = "635993"
+            placeInLeague = standingsDSM.index(team) + 1
         elif team in leagueMis.teams:
             cls = "misfit"
+            leagueId = "517497302"
+            placeInLeague = standingsMis.index(team) + 1
 
         rep += "<tr class=\"" + cls + "\">"
 
-        rep += "<td>"
+        rep += "<td style=\"text-align: center;\">"
         rep += str(idx + 1)
+        rep += "</td>"
+
+        rep += "<td style=\"text-align: center;\">"
+        rep += str(placeInLeague)
         rep += "</td>"
 
         rep += "<td>"
         rep += "<img src=\"" + team.logo_url + "\" style=\"vertical-align:middle; height: 20px; width: 20px; overflow: hidden; margin-right: 5px;\" />"
-        rep += "<span>" + team.team_name + "</span> "
+        rep += "<a href=\"https://fantasy.espn.com/football/team?leagueId=" + leagueId + "&teamId=" + str(team.team_id) + "\">" + team.team_name + "</a> "
         rep += "<span>(" + team.owners[0]["firstName"] + " " + team.owners[0]["lastName"] + ")</span>"
         rep += "</td>"
 
-        rep += "<td>"
+        rep += "<td style=\"text-align: center;\">"
         rep += str(team.wins)
         rep += "</td>"
 
-        rep += "<td>"
+        rep += "<td style=\"text-align: center;\">"
         rep += str(team.losses)
         rep += "</td>"
 
-        rep += "<td>"
+        rep += "<td style=\"text-align: center;\">"
         rep += str(team.ties)
         rep += "</td>"
 
-        htmlTxt = "<td>{:10.1f}</td>"
+        htmlTxt = "<td style=\"text-align: center;\">{:10.1f}</td>"
         rep += htmlTxt.format(team.points_for)
 
-        htmlTxt = "<td>{:10.0f}</td>"
+        htmlTxt = "<td style=\"text-align: center;\">{:10.0f}</td>"
         rep += htmlTxt.format(team.playoff_pct)
 
         rep += "</tr>"
@@ -408,9 +513,6 @@ def standings():
 
     rep += "</body>"
     rep += "<style>"
-    rep += "table {"
-    rep += "width: 100%;"
-    rep += "}"
     rep += "td {"
     rep += "padding: 5px;"
     rep += "}"
