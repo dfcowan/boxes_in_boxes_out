@@ -290,7 +290,7 @@ def boxScores():
     rep += "<body>"
     rep += "<h1>Boxes In, Boxes Out<br/>Scoreboard</h1>"
 
-    rep += "<a href=\"standings\">Standings</a>"
+    rep += "<a href=\"standings\">Standings</a><br/><br/>"
 
     i = 0
     for boxScore in allBoxScores:
@@ -376,7 +376,7 @@ def boxScores():
     rep += "</body>"
     rep += "<style>"
     rep += ".boxScore {"
-    rep += "width: 600px;"
+    rep += "max-width: 600px;"
     rep += "border: 2px solid gray;"
     rep += "margin: 3px;"
     rep += "padding: 3px;"
@@ -437,7 +437,7 @@ def standings():
     rep += "<body>"
     rep += "<h1>Boxes In, Boxes Out<br/>Standings</h1>"
 
-    rep += "<a href=\"boxScores\">Box Scores</a>"
+    rep += "<a href=\"boxScores\">Box Scores</a><br/><br/>"
 
     rep += "<table>"
     rep += "<thead>"
