@@ -406,7 +406,7 @@ def sortPoints(team: Team):
     return -1 * team.points_for
 
 def sortWins(team: Team):
-    return -1 * team.points_for
+    return -1 * team.wins
 
 def sortPlayoff(team: Team):
     return -1 * team.playoff_pct
