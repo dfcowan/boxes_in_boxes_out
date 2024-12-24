@@ -167,7 +167,7 @@ def finalsScoreboard():
     rep += "<tr>"
     rep += "<td>"
     leagueDev = League(league_id=1020397, year=year)
-    teamAbe = leagueDev.teams[1]
+    teamAbe = leagueDev.teams[7]
     lineupAbe = [4426348, 4429745, 4362238, 16800, 4258173, 4430027, 4697815, 4241479,-16021]
     rep += printTeam(teamAbe, lineupAbe, week)
     rep += "</td>"
