@@ -156,7 +156,7 @@ def printTeam(team: Team, lineup: list[int], week: int):
 
 @scoreboard.route('/finalsScoreboard', methods=['GET'])
 def finalsScoreboard():
-    week = 1
+    week = 17
 
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
@@ -167,8 +167,8 @@ def finalsScoreboard():
     rep += "<tr>"
     rep += "<td>"
     leagueDev = League(league_id=1020397, year=year)
-    teamDrew = leagueDev.teams[3]
-    lineupDrew = [3117251, 15847, 4242335, 4360310, 2577327, 4036378, 2576414,4428331,-16013]
+    teamDrew = leagueDev.teams[5]
+    lineupDrew = [3116407,3045147,4362238,16800,4258173,4430027, 4429795, 4426348, -16011]
     rep += printTeam(teamDrew, lineupDrew, week)
     rep += "</td>"
     rep += "</tr>"
@@ -176,8 +176,8 @@ def finalsScoreboard():
     rep += "<tr>"
     rep += "<td>"
     leagueAna = League(league_id=1953587261, year=year)
-    teamAlex = leagueAna.teams[4]
-    lineupAlex = [3139477, 4697815, 4242431, 4374302, 4360438, 4361050, 4361741, 4361777, -16013]
+    teamAlex = leagueAna.teams[8]
+    lineupAlex = [3046779, 4430737, 3042519, 16737, 16800,4242355, 4612826, 3052587, -16024]
     rep += printTeam(teamAlex, lineupAlex, week)
     rep += "</td>"
     rep += "</tr>"
@@ -185,8 +185,8 @@ def finalsScoreboard():
     rep += "<tr>"
     rep += "<td>"
     leagueDSM = League(league_id=635993, year=year)
-    teamByrd = leagueDSM.teams[3]
-    lineupByrd = [4379399,3916387,3054850,3116406,4241478,3123076,4259545,4432577,-16021]
+    teamByrd = leagueDSM.teams[10]
+    lineupByrd = [3046779, 4427366, 4429795, 16800,4432773, 4360635,3045147, 4241478, -16001]
     rep += printTeam(teamByrd, lineupByrd, week)
     rep += "</td>"
     rep += "</tr>"
@@ -195,7 +195,7 @@ def finalsScoreboard():
     rep += "<td>"
     leagueMis = League(league_id=517497302, year=year)
     teamJeremy = leagueMis.teams[1]
-    lineupJeremy = [2577417,3054850,4430737,4262921,4569618,4361307,3042519,4432577,-16021]
+    lineupJeremy = [3915511,3043078, 4241985,4569618,16737,3116365,4047365,4426348,-16011]
     rep += printTeam(teamJeremy, lineupJeremy, week)
     rep += "</td>"
     rep += "</tr>"
