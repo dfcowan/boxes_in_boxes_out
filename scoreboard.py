@@ -1,13 +1,10 @@
 import json
-import requests
-import re
-from io import BytesIO, StringIO
 from espn_api.football import League, Player, Team, BoxPlayer, box_score
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template
 scoreboard = Flask(__name__)
 
 
-year = 2024
+year = 2025
 
 # A welcome message to test our server
 @scoreboard.route('/')
@@ -153,10 +150,14 @@ def printTeam(team: Team, lineup: list[int], week: int):
     html += "</div>"
     return html
 
+# @scoreboard.route('/finalsScoreboardV2', methods=['GET'])
+# def finalsScoreboardV2():
+#     return render_template('finalsScoreboard.html')
+
 
 @scoreboard.route('/finalsScoreboard', methods=['GET'])
 def finalsScoreboard():
-    week = 17
+    week = 16
 
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
@@ -166,37 +167,37 @@ def finalsScoreboard():
     rep += "<table>"
     rep += "<tr>"
     rep += "<td>"
-    leagueDev = League(league_id=1020397, year=year)
-    teamDrew = leagueDev.teams[5]
-    lineupDrew = [3116407,3045147,4362238,16800,4258173,4430027, 4429795, 4426348, -16011]
-    rep += printTeam(teamDrew, lineupDrew, week)
+    leagueNFCEast = League(league_id=653771400, year=year)
+    teamEast = leagueNFCEast.teams[2]
+    lineupEast = [3046779, 4047365, 4360516, 4258173, 4430878, 3046439, 4567048, 4432577, -16034]
+    rep += printTeam(teamEast, lineupEast, week)
     rep += "</td>"
     rep += "</tr>"
 
     rep += "<tr>"
     rep += "<td>"
-    leagueAna = League(league_id=1953587261, year=year)
-    teamAlex = leagueAna.teams[8]
-    lineupAlex = [3046779, 4430737, 3042519, 16737, 16800,4242355, 4612826, 3052587, -16024]
-    rep += printTeam(teamAlex, lineupAlex, week)
+    leagueAFCWest = League(league_id=1020397, year=year)
+    teamWest = leagueAFCWest.teams[2]
+    lineupWest = [3046779, 4239996, 4596448, 4426515, 4361370, 4361307, 4567048, 4038941, -16007]
+    rep += printTeam(teamWest, lineupWest, week)
     rep += "</td>"
     rep += "</tr>"
 
     rep += "<tr>"
     rep += "<td>"
-    leagueDSM = League(league_id=635993, year=year)
-    teamByrd = leagueDSM.teams[10]
-    lineupByrd = [3046779, 4427366, 4429795, 16800,4432773, 4360635,3045147, 4241478, -16001]
-    rep += printTeam(teamByrd, lineupByrd, week)
+    leagueAFCSouth = League(league_id=517497302, year=year)
+    teamSouth = leagueAFCSouth.teams[7]
+    lineupSouth = [2578570, 3043078, 4379399, 4430878, 3886598, 3929645, 4568490, 4361741, -16021]
+    rep += printTeam(teamSouth, lineupSouth, week)
     rep += "</td>"
     rep += "</tr>"
 
     rep += "<tr>"
     rep += "<td>"
-    leagueMis = League(league_id=517497302, year=year)
-    teamJeremy = leagueMis.teams[1]
-    lineupJeremy = [3915511,3043078, 4241985,4569618,16737,3116365,4047365,4426348,-16011]
-    rep += printTeam(teamJeremy, lineupJeremy, week)
+    leagueNFCNorth = League(league_id=1953587261, year=year)
+    teamNorth = leagueNFCNorth.teams[0]
+    lineupNorth = [4431452, 4596448, 4038815, 4430878, 3915416, 4432665, 3886598, 4431611, -16007]
+    rep += printTeam(teamNorth, lineupNorth, week)
     rep += "</td>"
     rep += "</tr>"
     rep += "</table>"
@@ -220,70 +221,70 @@ def finalsScoreboard():
 
 @scoreboard.route('/boxScores', methods=['GET'])
 def boxScores():
-    leagueDev = League(league_id=1020397, year=year)
-    leagueAna = League(league_id=1953587261, year=year)
-    leagueDSM = League(league_id=635993, year=year)
-    leagueMis = League(league_id=517497302, year=year)
+    leagueNFCEast = League(league_id=653771400, year=year)
+    leagueAFCWest = League(league_id=1020397, year=year)
+    leagueAFCSouth = League(league_id=517497302, year=year)
+    leagueNFCNorth = League(league_id=1953587261, year=year)
 
-    week = leagueDev.current_week
+    week = leagueNFCEast.current_week
 
     allBoxScores = []
 
-    scoresDev = []
-    scoresAna = []
-    scoresDSM = []
-    scoresMis = []
+    scoresNFCEast = []
+    scoresAFCWest = []
+    scoresAFCSouth = []
+    scoresNFCNorth = []
 
-    projScoresDev = []
-    projScoresAna = []
-    projScoresDSM = []
-    projScoresMis = []
+    projScoresNFCEast = []
+    projScoresAFCWest = []
+    projScoresAFCSouth = []
+    projScoresNFCNorth = []
 
-    for boxScore in leagueDev.box_scores(week=week):
+    for boxScore in leagueNFCEast.box_scores(week=week):
         allBoxScores.append(boxScore)
 
-        scoresDev.append(boxScore.home_score)
-        scoresDev.append(boxScore.away_score)
+        scoresNFCEast.append(boxScore.home_score)
+        scoresNFCEast.append(boxScore.away_score)
 
-        projScoresDev.append(boxScore.home_projected)
-        projScoresDev.append(boxScore.away_projected)
+        projScoresNFCEast.append(boxScore.home_projected)
+        projScoresNFCEast.append(boxScore.away_projected)
 
-    for boxScore in leagueAna.box_scores(week=week):
+    for boxScore in leagueAFCWest.box_scores(week=week):
         allBoxScores.append(boxScore)
 
-        scoresAna.append(boxScore.home_score)
-        scoresAna.append(boxScore.away_score)
+        scoresAFCWest.append(boxScore.home_score)
+        scoresAFCWest.append(boxScore.away_score)
 
-        projScoresAna.append(boxScore.home_projected)
-        projScoresAna.append(boxScore.away_projected)
+        projScoresAFCWest.append(boxScore.home_projected)
+        projScoresAFCWest.append(boxScore.away_projected)
 
-    for boxScore in leagueDSM.box_scores(week=week):
+    for boxScore in leagueAFCSouth.box_scores(week=week):
         allBoxScores.append(boxScore)
 
-        scoresDSM.append(boxScore.home_score)
-        scoresDSM.append(boxScore.away_score)
+        scoresAFCSouth.append(boxScore.home_score)
+        scoresAFCSouth.append(boxScore.away_score)
 
-        projScoresDSM.append(boxScore.home_projected)
-        projScoresDSM.append(boxScore.away_projected)
+        projScoresAFCSouth.append(boxScore.home_projected)
+        projScoresAFCSouth.append(boxScore.away_projected)
 
-    for boxScore in leagueMis.box_scores(week=week):
+    for boxScore in leagueNFCNorth.box_scores(week=week):
         allBoxScores.append(boxScore)
 
-        scoresMis.append(boxScore.home_score)
-        scoresMis.append(boxScore.away_score)
+        scoresNFCNorth.append(boxScore.home_score)
+        scoresNFCNorth.append(boxScore.away_score)
 
-        projScoresMis.append(boxScore.home_projected)
-        projScoresMis.append(boxScore.away_projected)
+        projScoresNFCNorth.append(boxScore.home_projected)
+        projScoresNFCNorth.append(boxScore.away_projected)
 
-    scoresDev.sort(reverse=True)
-    scoresAna.sort(reverse=True)
-    scoresDSM.sort(reverse=True)
-    scoresMis.sort(reverse=True)
+    scoresNFCEast.sort(reverse=True)
+    scoresAFCWest.sort(reverse=True)
+    scoresAFCSouth.sort(reverse=True)
+    scoresNFCNorth.sort(reverse=True)
 
-    projScoresDev.sort(reverse=True)
-    projScoresAna.sort(reverse=True)
-    projScoresDSM.sort(reverse=True)
-    projScoresMis.sort(reverse=True)
+    projScoresNFCEast.sort(reverse=True)
+    projScoresAFCWest.sort(reverse=True)
+    projScoresAFCSouth.sort(reverse=True)
+    projScoresNFCNorth.sort(reverse=True)
 
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
@@ -294,45 +295,45 @@ def boxScores():
 
     i = 0
     for boxScore in allBoxScores:
-        cls = "developer"
-        leagueId = "1020397"
+        cls = "NFCEast"
+        leagueId = "653771400"
         homeRank = -1
         awayRank = -1
         homeProjectedRank = -1
         awayProjectedRank = -1
         if i < 6:
-            homeRank = scoresDev.index(boxScore.home_score) + 1
-            awayRank = scoresDev.index(boxScore.away_score) + 1
+            homeRank = scoresNFCEast.index(boxScore.home_score) + 1
+            awayRank = scoresNFCEast.index(boxScore.away_score) + 1
 
-            homeProjectedRank = projScoresDev.index(boxScore.home_projected) + 1
-            awayProjectedRank = projScoresDev.index(boxScore.away_projected) + 1
+            homeProjectedRank = projScoresNFCEast.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresNFCEast.index(boxScore.away_projected) + 1
         if i>=6 and i<12:
-            cls = "analyst"
-            leagueId = "1953587261"
+            cls = "AFCWest"
+            leagueId = "1020397"
 
-            homeRank = scoresAna.index(boxScore.home_score) + 1
-            awayRank = scoresAna.index(boxScore.away_score) + 1
+            homeRank = scoresAFCWest.index(boxScore.home_score) + 1
+            awayRank = scoresAFCWest.index(boxScore.away_score) + 1
 
-            homeProjectedRank = projScoresAna.index(boxScore.home_projected) + 1
-            awayProjectedRank = projScoresAna.index(boxScore.away_projected) + 1
+            homeProjectedRank = projScoresAFCWest.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresAFCWest.index(boxScore.away_projected) + 1
         elif i>=12 and i<18:
-            cls = "dsm"
-            leagueId = "635993"
-
-            homeRank = scoresDSM.index(boxScore.home_score) + 1
-            awayRank = scoresDSM.index(boxScore.away_score) + 1
-
-            homeProjectedRank = projScoresDSM.index(boxScore.home_projected) + 1
-            awayProjectedRank = projScoresDSM.index(boxScore.away_projected) + 1
-        elif i>=18:
-            cls = "misfit"
+            cls = "AFCSouth"
             leagueId = "517497302"
 
-            homeRank = scoresMis.index(boxScore.home_score) + 1
-            awayRank = scoresMis.index(boxScore.away_score) + 1
+            homeRank = scoresAFCSouth.index(boxScore.home_score) + 1
+            awayRank = scoresAFCSouth.index(boxScore.away_score) + 1
 
-            homeProjectedRank = projScoresMis.index(boxScore.home_projected) + 1
-            awayProjectedRank = projScoresMis.index(boxScore.away_projected) + 1
+            homeProjectedRank = projScoresAFCSouth.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresAFCSouth.index(boxScore.away_projected) + 1
+        elif i>=18:
+            cls = "NFCNorth"
+            leagueId = "1953587261"
+
+            homeRank = scoresNFCNorth.index(boxScore.home_score) + 1
+            awayRank = scoresNFCNorth.index(boxScore.away_score) + 1
+
+            homeProjectedRank = projScoresNFCNorth.index(boxScore.home_projected) + 1
+            awayProjectedRank = projScoresNFCNorth.index(boxScore.away_projected) + 1
 
         rep += "<div class=\"boxScore " + cls + "\">"
         rep += "<table style=\"width: 100%;\">"
@@ -381,19 +382,19 @@ def boxScores():
     rep += "margin: 3px;"
     rep += "padding: 3px;"
     rep += "}"
-    rep += ".developer"
+    rep += ".NFCEast"
     rep += "{"
     rep += "background-color: ef476f;"
     rep += "}"
-    rep += ".analyst"
+    rep += ".AFCWest"
     rep += "{"
     rep += "background-color: ffd166"
     rep += "}"
-    rep += ".dsm"
+    rep += ".AFCSouth"
     rep += "{"
     rep += "background-color: 06d6a0"
     rep += "}"
-    rep += ".misfit"
+    rep += ".NFCNorth"
     rep += "{"
     rep += "background-color: 118ab2"
     rep += "}"
@@ -413,20 +414,20 @@ def sortPlayoff(team: Team):
 
 @scoreboard.route('/standings', methods=['GET'])
 def standings():
-    leagueDev = League(league_id=1020397, year=year)
-    leagueAna = League(league_id=1953587261, year=year)
-    leagueDSM = League(league_id=635993, year=year)
-    leagueMis = League(league_id=517497302, year=year)
+    leagueNFCEast = League(league_id=653771400, year=year)
+    leagueAFCWest = League(league_id=1020397, year=year)
+    leagueAFCSouth = League(league_id=517497302, year=year)
+    leagueNFCNorth = League(league_id=1953587261, year=year)
 
-    standingsDev = leagueDev.standings()
-    standingsAna = leagueAna.standings()
-    standingsDSM = leagueDSM.standings()
-    standingsMis = leagueMis.standings()
+    standingsNFCEast = leagueNFCEast.standings()
+    standingsAFCWest = leagueAFCWest.standings()
+    standingsAFCSouth = leagueAFCSouth.standings()
+    standingsNFCNorth = leagueNFCNorth.standings()
 
-    allTeams = leagueDev.teams.copy()
-    allTeams = allTeams + leagueAna.teams
-    allTeams = allTeams + leagueDSM.teams
-    allTeams = allTeams + leagueMis.teams
+    allTeams = leagueNFCEast.teams.copy()
+    allTeams = allTeams + leagueAFCWest.teams
+    allTeams = allTeams + leagueAFCSouth.teams
+    allTeams = allTeams + leagueNFCNorth.teams
 
     allTeams.sort(key=sortPlayoff)
     allTeams.sort(key=sortPoints)
@@ -456,22 +457,22 @@ def standings():
 
     for (idx, team) in enumerate(allTeams):
         placeInLeague = -1
-        if team in leagueDev.teams:
-            cls = "developer"
+        if team in leagueNFCEast.teams:
+            cls = "NFCEast"
+            leagueId = "653771400"
+            placeInLeague = standingsNFCEast.index(team) + 1
+        if team in leagueAFCWest.teams:
+            cls = "AFCWest"
             leagueId = "1020397"
-            placeInLeague = standingsDev.index(team) + 1
-        if team in leagueAna.teams:
-            cls = "analyst"
-            leagueId = "1953587261"
-            placeInLeague = standingsAna.index(team) + 1
-        elif team in leagueDSM.teams:
-            cls = "dsm"
-            leagueId = "635993"
-            placeInLeague = standingsDSM.index(team) + 1
-        elif team in leagueMis.teams:
-            cls = "misfit"
+            placeInLeague = standingsAFCWest.index(team) + 1
+        elif team in leagueAFCSouth.teams:
+            cls = "AFCSouth"
             leagueId = "517497302"
-            placeInLeague = standingsMis.index(team) + 1
+            placeInLeague = standingsAFCSouth.index(team) + 1
+        elif team in leagueNFCNorth.teams:
+            cls = "NFCNorth"
+            leagueId = "1953587261"
+            placeInLeague = standingsNFCNorth.index(team) + 1
 
         rep += "<tr class=\"" + cls + "\">"
 
@@ -521,19 +522,19 @@ def standings():
     rep += "text-align: left;"
     rep += "font-weight: bold;"
     rep += "}"
-    rep += ".developer"
+    rep += ".NFCEast"
     rep += "{"
     rep += "background-color: ef476f;"
     rep += "}"
-    rep += ".analyst"
+    rep += ".AFCWest"
     rep += "{"
     rep += "background-color: ffd166"
     rep += "}"
-    rep += ".dsm"
+    rep += ".AFCSouth"
     rep += "{"
     rep += "background-color: 06d6a0"
     rep += "}"
-    rep += ".misfit"
+    rep += ".NFCNorth"
     rep += "{"
     rep += "background-color: 118ab2"
     rep += "}"
