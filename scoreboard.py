@@ -23,7 +23,7 @@ def eligibleForPosition(position: str, playerPosition: str):
 
     return False
 
-def printPlayer(position: str, player: Player, longestNameLength: int, week: int):
+def printPlayer(position: str, player: Player, longestNameLength: int, week: int, showIds: bool):
     html = ""
     stats = player.stats[week]
 
@@ -34,8 +34,12 @@ def printPlayer(position: str, player: Player, longestNameLength: int, week: int
     html += "<tr>"
     html += "<td>" + position + "</td>"
 
-    htmlTxt = "<td><span title='{}'>{}</span></td><td>{}</td>"
-    html += htmlTxt.format(player.playerId, player.name, player.proTeam)
+    if showIds:
+        htmlTxt = "<td>{} {}</td><td>{}</td>"
+        html += htmlTxt.format(player.playerId, player.name, player.proTeam)
+    else:
+        htmlTxt = "<td><span title='{}'>{}</span></td><td>{}</td>"
+        html += htmlTxt.format(player.playerId, player.name, player.proTeam)
 
     txt = "{} {} {} ({})"
     txt = txt.format(position.ljust(4), player.name, player.proTeam, player.playerId).ljust(longestNameLength)
@@ -51,7 +55,7 @@ def printPlayer(position: str, player: Player, longestNameLength: int, week: int
 
     return html
 
-def printTeam(team: Team, lineup: list[int], week: int):
+def printTeam(team: Team, lineup: list[int], week: int, showIds: bool):
     html = "<div style='border: 1px solid black;'>"
     html += "<h2>" + team.team_name + "</h2>"
     print(team.team_name)
@@ -100,7 +104,7 @@ def printTeam(team: Team, lineup: list[int], week: int):
     for position in positions:
         for player in team.roster:
             if player.playerId in lineup and eligibleForPosition(position, player.position) and not(player.playerId in printedLineup):
-                html += printPlayer(position, player, longestNameLength, week)
+                html += printPlayer(position, player, longestNameLength, week, showIds)
                 stats = player.stats[week]
 
                 totalProjected += stats["projected_points"]
@@ -159,10 +163,12 @@ def printTeam(team: Team, lineup: list[int], week: int):
 def finalsScoreboard():
     week = 17
 
+    showIds = request.args.get('showIds', type=bool)
+
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
     rep += "<body>"
-    rep += "<h1>Boxes In, Boxes Out World Championship</h1>"
+    rep += "<h1>Boxes In, Boxes Out<br>World Championship</h1>"
 
     rep += "<table>"
     rep += "<tr>"
@@ -170,7 +176,7 @@ def finalsScoreboard():
     leagueNFCEast = League(league_id=653771400, year=year)
     teamEast = leagueNFCEast.teams[2]
     lineupEast = [3046779, 4047365, 4360516, 4258173, 4430878, 3046439, 4567048, 4432577, -16034]
-    rep += printTeam(teamEast, lineupEast, week)
+    rep += printTeam(teamEast, lineupEast, week, showIds)
     rep += "</td>"
     rep += "</tr>"
 
@@ -179,7 +185,7 @@ def finalsScoreboard():
     leagueAFCWest = League(league_id=1020397, year=year)
     teamWest = leagueAFCWest.teams[2]
     lineupWest = [3046779, 4239996, 4596448, 4426515, 4361370, 4361307, 4567048, 4038941, -16007]
-    rep += printTeam(teamWest, lineupWest, week)
+    rep += printTeam(teamWest, lineupWest, week, showIds)
     rep += "</td>"
     rep += "</tr>"
 
@@ -188,7 +194,7 @@ def finalsScoreboard():
     leagueAFCSouth = League(league_id=517497302, year=year)
     teamSouth = leagueAFCSouth.teams[7]
     lineupSouth = [2578570, 3043078, 4379399, 4430878, 3886598, 3929645, 4568490, 4361741, -16021]
-    rep += printTeam(teamSouth, lineupSouth, week)
+    rep += printTeam(teamSouth, lineupSouth, week, showIds)
     rep += "</td>"
     rep += "</tr>"
 
@@ -197,7 +203,7 @@ def finalsScoreboard():
     leagueNFCNorth = League(league_id=1953587261, year=year)
     teamNorth = leagueNFCNorth.teams[0]
     lineupNorth = [4431452, 4596448, 4038815, 4430878, 3915416, 4432665, 3886598, 4431611, -16007]
-    rep += printTeam(teamNorth, lineupNorth, week)
+    rep += printTeam(teamNorth, lineupNorth, week, showIds)
     rep += "</td>"
     rep += "</tr>"
     rep += "</table>"
