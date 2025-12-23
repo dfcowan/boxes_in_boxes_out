@@ -157,7 +157,7 @@ def printTeam(team: Team, lineup: list[int], week: int):
 
 @scoreboard.route('/finalsScoreboard', methods=['GET'])
 def finalsScoreboard():
-    week = 16
+    week = 17
 
     rep = "<html>"
     rep += "<meta name='viewport' content='width=device-width'>"
