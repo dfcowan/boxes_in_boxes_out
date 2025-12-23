@@ -148,7 +148,7 @@ def printTeam(team: Team, lineup: list[int], week: int, showIds: bool):
     print(txt)
     for player in team.roster:
         if not(player.playerId in lineup):
-            html += printPlayer(player.position, player, longestNameLength, week)
+            html += printPlayer(player.position, player, longestNameLength, week, showIds)
 
     html += "</table>"
     html += "</div>"
