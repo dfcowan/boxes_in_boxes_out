@@ -175,7 +175,7 @@ def finalsScoreboard():
     rep += "<td>"
     leagueNFCEast = League(league_id=653771400, year=year)
     teamEast = leagueNFCEast.teams[2]
-    lineupEast = [3046779, 4047365, 4360516, 4258173, 4430878, 3046439, 4567048, 4432577, -16034]
+    lineupEast = [3046779, 4240657, 4360516, 4258173, 4430878, 3046439, 4567048, 4432577, -16034]
     rep += printTeam(teamEast, lineupEast, week, showIds)
     rep += "</td>"
     rep += "</tr>"
